@@ -4,13 +4,15 @@ This repository is the main accompanying artifact for the SC'22 submission "Dein
 
 ## Submission Summary
 
-The submission describes Deinsum, a Python-based framework for automatically optimizing and executing in distributed-memory machines multilinear algebra kernels expressed in Einstein notation (einsum). Deinsum is evaluated on 10 different kernels and its performance is compared with [Cyclops Tensor Framework's (CTF)](https://github.com/cyclops-community/ctf) on CPU, and GPU.
+The submission describes Deinsum, a Python-based framework for automatically optimizing and executing in distributed-memory machines multilinear algebra kernels expressed in Einstein notation (einsum). Deinsum is evaluated on 10 different kernels and its performance is compared with [Cyclops Tensor Framework's (CTF)](https://github.com/cyclops-community/ctf) on CPU (Fig. 1), and GPU (Fig. 2).
 
-![Deinsum and CTF CPU runtimes on up to 512 nodes. Deinsum’s computation time is also shown as part of the total
-runtime.](figures/cpu.png)
+![](figures/cpu.png)
+Fig. 1: Deinsum and CTF CPU runtimes on up to 512 nodes. Deinsum’s computation time is also shown as part of the total
+runtime.
 
-![Deinsum and CTF GPU runtimes on up to 512 nodes. Deinsum’s runtime with input data resident in global GPU
-memory is also shown as part of the total runtime.](figures/gpu.png)
+![](figures/gpu.png)
+Fig. 2: Deinsum and CTF GPU runtimes on up to 512 nodes. Deinsum’s runtime with input data resident in global GPU
+memory is also shown as part of the total runtime.
 
 ## Hardware Requirements
 
