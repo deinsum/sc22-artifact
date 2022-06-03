@@ -18,7 +18,7 @@ memory is also shown as part of the total runtime.
 
 We provide dockerfiles and bash scripts, which can be used to create a docker image, compile all relevant libraries, execute the experiments reported in the paper, and reproduce the figures shown in the paper. Instructions based on docker (https://www.docker.com) follow. However, they should largely hold for other docker-compatible software, e.g., CSCS Sarus (https://user.cscs.ch/tools/containers/sarus).
 - [CPU Testing](docker_cpu)
-- [GPU Testing](docker_GPU)
+- [GPU Testing](docker_gpu)
 
 ## Hardware Requirements
 

@@ -1,6 +1,6 @@
 # Deinsum CPU Testing with Docker Container
 
-Please follow the steps below:
+To reproduce CPU results with the provided Docker container, follow the steps below. Please note that in all the following, image-name, volume-name, container-name, and number-of-nodes are placeholders. The names can be freely chosen.
 
 1. Download the files included in `sc22-artifact/docker_cpu` in the same folder.
 2. To build the image, execute inside the artifact folder the following:
