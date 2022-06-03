@@ -14,6 +14,12 @@ runtime.
 Fig. 2: Deinsum and CTF GPU runtimes on up to 512 nodes. Deinsum’s runtime with input data resident in global GPU
 memory is also shown as part of the total runtime.
 
+## Quickstart
+
+We provide dockerfiles and bash scripts, which can be used to create a docker image, compile all relevant libraries, execute the experiments reported in the paper, and reproduce the figures shown in the paper. Instructions based on docker (https://www.docker.com) follow. However, they should largely hold for other docker-compatible software, e.g., CSCS Sarus (https://user.cscs.ch/tools/containers/sarus).
+- [CPU Testing]()
+- [GPU Testing]()
+
 ## Hardware Requirements
 
 ### Submission Testing Setup
