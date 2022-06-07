@@ -1,11 +1,46 @@
-FROM nvcr.io/nvidia/nvhpc:22.5-devel-cuda_multi-ubuntu20.04
+FROM nvcr.io/nvidia/nvhpc:21.9-devel-cuda11.4-ubuntu20.04
 
 # Python 3.10.4 (using deadsnakes PPA)
 RUN apt-get update
 RUN apt-get install -y software-properties-common
 RUN add-apt-repository -y ppa:deadsnakes/ppa
-RUN apt-get -y install python3.10
+RUN apt-get -y install curl python3.10 python3.10-distutils python3.10-dev python3-apt
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 
-# MPICH
-RUN apt-get -y install mpich libmpich-dev
+# # MPICH (maybe OpenMPI installed in base image works)
+# RUN apt-get -y install mpich libmpich-dev
+
+# DaCe  and CTF Artifacts
+RUN git clone -b soap --recurse-submodules https://github.com/spcl/dace.git
+RUN apt-get install -y --reinstall ca-certificates
+RUN git clone https://spclgitlab.ethz.ch/alexnick/multilinear-algebra-sc22-artifact.git
+RUN git clone https://github.com/cyclops-community/ctf.git
+RUN cd dace && python3 -m pip install .
+RUN python3 -m pip install cupy-cuda114 opt_einsum pandas seaborn matplotlib
+RUN CFLAGS=-noswitcherror python3 -m pip install mpi4py
+
+RUN mkdir storage && cd storage && mkdir results && mkdir ctf_exec && mkdir libs && cd libs && mkdir ctf
+
+# Env vars
+ENV DACE_compiler_cpu_executable mpicxx
+ENV DACE_compiler_default_build_folder /storage/.dacecache
+ENV DACE_compiler_use_cache 1
+ENV CTF_ROOT /storage/libs/ctf
+ENV CTF_EXEC /storage/ctf_exec
+
+COPY compile_ctf.sh compile_ctf.sh
+COPY compile_ctf_programs.sh compile_ctf_programs.sh
+COPY run_ctf_bench.sh run_ctf_bench.sh
+COPY run_ctf.sh run_ctf.sh
+# COPY compile_hptt.sh compile_hptt.sh
+COPY run_deinsum.sh run_deinsum.sh
+COPY generate_plots.sh generate_plots.sh
+RUN chmod +x compile_ctf.sh
+RUN chmod +x compile_ctf_programs.sh
+RUN chmod +x run_ctf_bench.sh
+RUN chmod +x run_ctf.sh
+# RUN chmod +x compile_hptt.sh
+RUN chmod +x run_deinsum.sh
+RUN chmod +x generate_plots.sh
+CMD bash
