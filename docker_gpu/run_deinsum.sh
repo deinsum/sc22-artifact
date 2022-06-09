@@ -1,6 +1,8 @@
 #!/bin/bash
 
-./compile_hptt.sh
+source fix_path.sh
+
+# ./compile_hptt.sh
 cd /storage/results
 libiomp_path=/opt/intel/oneapi/compiler/2021.3.0/linux/compiler/lib/intel64_lin
 current_path=$LIBRARY_PATH
@@ -10,7 +12,7 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$MKLROOT/lib/intel64:$libiomp_path:$HPT
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$MKLROOT/lib/intel64:$HPTT_ROOT/lib"
 for prog in "mm" "mttkrp_order_3" "mttkrp_order_5" "ttmc"
 do
-    python3 /dace/samples/distributed/${prog}_testing.py
+    LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgomp.so.1 python3 /dace/samples/distributed/${prog}_testing_gpu.py
 done
 export LIBRARY_PATH=$current_path
 export LD_LIBRARY_PATH=$current_ldpath

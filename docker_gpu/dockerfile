@@ -8,17 +8,36 @@ RUN apt-get -y install curl python3.10 python3.10-distutils python3.10-dev pytho
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 
-# # MPICH (maybe OpenMPI installed in base image works)
-# RUN apt-get -y install mpich libmpich-dev
+# MPICH (maybe OpenMPI installed in base image works)
+RUN apt-get -y install mpich libmpich-dev
+
+# Intel oneAPI MKL 2021.3.0
+RUN apt-get -y install libblas-dev liblapack-dev
+RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
+RUN apt-get update && apt-get -y install intel-oneapi-mkl-2021.3.0 intel-oneapi-mkl-devel-2021.3.0
+
+# Setup MKL
+ENV MKLROOT /opt/intel/oneapi/mkl/2021.3.0
+RUN update-alternatives --install /usr/lib/x86_64-linux-gnu/libblas.so libblas.so-x86_64-linux-gnu $MKLROOT/lib/intel64/libmkl_rt.so 50
+RUN update-alternatives --install /usr/lib/x86_64-linux-gnu/libblas.so.3 libblas.so.3-x86_64-linux-gnu $MKLROOT/lib/intel64/libmkl_rt.so 50
+RUN update-alternatives --install /usr/lib/x86_64-linux-gnu/liblapack.so liblapack.so-x86_64-linux-gnu  $MKLROOT/lib/intel64/libmkl_rt.so 50
+RUN update-alternatives --install /usr/lib/x86_64-linux-gnu/liblapack.so.3 liblapack.so.3-x86_64-linux-gnu $MKLROOT/lib/intel64/libmkl_rt.so 50
+RUN echo "${MKLROOT}/lib/intel64" >> /etc/ld.so.conf.d/mkl.conf
+RUN ldconfig
+RUN echo "MKL_THREADING_LAYER=GNU" >> /etc/environment
 
 # DaCe  and CTF Artifacts
 RUN git clone -b soap --recurse-submodules https://github.com/spcl/dace.git
 RUN apt-get install -y --reinstall ca-certificates
 RUN git clone https://spclgitlab.ethz.ch/alexnick/multilinear-algebra-sc22-artifact.git
-RUN git clone https://github.com/cyclops-community/ctf.git
+RUN git clone -b gpu_devel_v2 https://github.com/cyclops-community/ctf.git
 RUN cd dace && python3 -m pip install .
 RUN python3 -m pip install cupy-cuda114 opt_einsum pandas seaborn matplotlib
-RUN CFLAGS=-noswitcherror python3 -m pip install mpi4py
+# Put /usr/bin in the front of PATH
+# Solves issue with nvc++ being used as mpicxx, overriding update-alternatives
+ENV PATH="/usr/bin:${PATH}"
+RUN python3 -m pip install mpi4py
 
 RUN mkdir storage && cd storage && mkdir results && mkdir ctf_exec && mkdir libs && cd libs && mkdir ctf
 
@@ -26,8 +45,22 @@ RUN mkdir storage && cd storage && mkdir results && mkdir ctf_exec && mkdir libs
 ENV DACE_compiler_cpu_executable mpicxx
 ENV DACE_compiler_default_build_folder /storage/.dacecache
 ENV DACE_compiler_use_cache 1
+ENV DACE_library_blas_default_implementation MKL
+ENV DACE_library_linalg_default_implementation TTGT
+ENV DACE_library_ttranspose_default_implementation HPTT
 ENV CTF_ROOT /storage/libs/ctf
 ENV CTF_EXEC /storage/ctf_exec
+ENV HPTT_ROOT /storage/libs/hptt
+
+RUN apt-get install -y unzip
+
+RUN echo "hello world!!!!"
+
+# For CMake
+ENV CUDA_PATH /opt/nvidia/hpc_sdk/Linux_x86_64/21.9/cuda/11.4/targets/x86_64-linux
+
+COPY fix_path.sh fix_path.sh
+RUN chmod +x fix_path.sh
 
 COPY compile_ctf.sh compile_ctf.sh
 COPY compile_ctf_programs.sh compile_ctf_programs.sh
