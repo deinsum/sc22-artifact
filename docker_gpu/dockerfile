@@ -27,6 +27,8 @@ RUN echo "${MKLROOT}/lib/intel64" >> /etc/ld.so.conf.d/mkl.conf
 RUN ldconfig
 RUN echo "MKL_THREADING_LAYER=GNU" >> /etc/environment
 
+RUN echo "hello world!!!!"
+
 # DaCe  and CTF Artifacts
 RUN git clone -b soap --recurse-submodules https://github.com/spcl/dace.git
 RUN apt-get install -y --reinstall ca-certificates
@@ -53,8 +55,6 @@ ENV CTF_EXEC /storage/ctf_exec
 ENV HPTT_ROOT /storage/libs/hptt
 
 RUN apt-get install -y unzip
-
-RUN echo "hello world!!!!"
 
 # For CMake
 ENV CUDA_PATH /opt/nvidia/hpc_sdk/Linux_x86_64/21.9/cuda/11.4/targets/x86_64-linux
