@@ -1,7 +1,9 @@
-FROM nvcr.io/nvidia/nvhpc:21.9-devel-cuda11.4-ubuntu20.04
+FROM nvcr.io/nvidia/nvhpc:22.5-devel-cuda_multi-ubuntu20.04
+# FROM nvcr.io/nvidia/nvhpc:22.5-runtime-cuda11.0-ubuntu20.04
+# FROM nvcr.io/nvidia/nvhpc:21.9-devel-cuda11.4-ubuntu20.04
 
 # Python 3.10.4 (using deadsnakes PPA)
-RUN apt-get update
+RUN apt-get update && apt-get -y upgrade
 RUN apt-get install -y software-properties-common
 RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get -y install curl python3.10 python3.10-distutils python3.10-dev python3-apt
@@ -14,7 +16,8 @@ RUN apt-get -y install mpich libmpich-dev
 # Intel oneAPI MKL 2021.3.0
 RUN apt-get -y install libblas-dev liblapack-dev
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
-RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
+# RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
+RUN echo "deb [trusted=yes] https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
 RUN apt-get update && apt-get -y install intel-oneapi-mkl-2021.3.0 intel-oneapi-mkl-devel-2021.3.0
 
 # Setup MKL
@@ -30,12 +33,13 @@ RUN echo "MKL_THREADING_LAYER=GNU" >> /etc/environment
 RUN echo "hello world!!!!"
 
 # DaCe  and CTF Artifacts
+RUN apt-get install -y git
 RUN git clone -b soap --recurse-submodules https://github.com/spcl/dace.git
 RUN apt-get install -y --reinstall ca-certificates
 RUN git clone https://spclgitlab.ethz.ch/alexnick/multilinear-algebra-sc22-artifact.git
 RUN git clone -b gpu_devel_v2 https://github.com/cyclops-community/ctf.git
 RUN cd dace && python3 -m pip install .
-RUN python3 -m pip install cupy-cuda114 opt_einsum pandas seaborn matplotlib
+RUN python3 -m pip install cupy-cuda110 opt_einsum pandas seaborn matplotlib
 # Put /usr/bin in the front of PATH
 # Solves issue with nvc++ being used as mpicxx, overriding update-alternatives
 ENV PATH="/usr/bin:${PATH}"
@@ -55,9 +59,10 @@ ENV CTF_EXEC /storage/ctf_exec
 ENV HPTT_ROOT /storage/libs/hptt
 
 RUN apt-get install -y unzip
+# RUN ln -s /usr/local/bin/cmake /usr/bin/cmake
 
 # For CMake
-ENV CUDA_PATH /opt/nvidia/hpc_sdk/Linux_x86_64/21.9/cuda/11.4/targets/x86_64-linux
+ENV CUDA_PATH /opt/nvidia/hpc_sdk/Linux_x86_64/22.5/cuda/11.0/targets/x86_64-linux
 
 COPY fix_path.sh fix_path.sh
 RUN chmod +x fix_path.sh
