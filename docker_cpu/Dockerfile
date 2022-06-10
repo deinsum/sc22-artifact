@@ -17,6 +17,7 @@ RUN tar xzf Python-3.10.2.tgz
 RUN cd Python-3.10.2 && ./configure --enable-optimizations && make install
 
 # DaCe  and CTF Artifacts
+# ARG DUMMY=unknown
 RUN git clone -b soap --recurse-submodules https://github.com/spcl/dace.git
 RUN git clone https://spclgitlab.ethz.ch/alexnick/multilinear-algebra-sc22-artifact.git
 RUN git clone https://github.com/cyclops-community/ctf.git
@@ -58,6 +59,7 @@ COPY run_ctf_bench.sh run_ctf_bench.sh
 COPY run_ctf.sh run_ctf.sh
 COPY compile_hptt.sh compile_hptt.sh
 COPY run_deinsum.sh run_deinsum.sh
+COPY validate_deinsum.sh validate_deinsum.sh
 COPY generate_plots.sh generate_plots.sh
 RUN chmod +x compile_ctf.sh
 RUN chmod +x compile_ctf_programs.sh
@@ -65,6 +67,7 @@ RUN chmod +x run_ctf_bench.sh
 RUN chmod +x run_ctf.sh
 RUN chmod +x compile_hptt.sh
 RUN chmod +x run_deinsum.sh
+RUN chmod +x validate_deinsum.sh
 RUN chmod +x generate_plots.sh
 CMD bash
 
