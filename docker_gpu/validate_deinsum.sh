@@ -10,10 +10,9 @@ current_ldpath=$LD_LIBRARY_PATH
 export LIBRARY_PATH="$LIBRARY_PATH:$MKLROOT/lib/intel64"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$MKLROOT/lib/intel64:$libiomp_path:$HPTT_ROOT/lib"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$MKLROOT/lib/intel64:$HPTT_ROOT/lib"
-for prog in "mm" "mttkrp_order_3" "mttkrp_order_5" "ttmc"
+for prog in "mm" "mttkrp" "ttmc"
 do
-    LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgomp.so.1 python3 /dace/samples/distributed/${prog}_testing_gpu.py
-    LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgomp.so.1 python3 /dace/samples/distributed/${prog}_testing_gpu_cupy.py
+    LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgomp.so.1 python3 /dace/samples/distributed/${prog}_validation_gpu.py
 done
 export LIBRARY_PATH=$current_path
 export LD_LIBRARY_PATH=$current_ldpath

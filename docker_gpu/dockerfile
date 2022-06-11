@@ -33,6 +33,7 @@ RUN echo "MKL_THREADING_LAYER=GNU" >> /etc/environment
 RUN echo "hello world!!!!"
 
 # DaCe  and CTF Artifacts
+# ARG DUMMY=unknown
 RUN apt-get install -y git
 RUN git clone -b soap --recurse-submodules https://github.com/spcl/dace.git
 RUN apt-get install -y --reinstall ca-certificates
@@ -72,6 +73,7 @@ COPY compile_ctf_programs.sh compile_ctf_programs.sh
 COPY run_ctf_bench.sh run_ctf_bench.sh
 COPY run_ctf.sh run_ctf.sh
 # COPY compile_hptt.sh compile_hptt.sh
+COPY validate_deinsum.sh validate_deinsum.sh
 COPY run_deinsum.sh run_deinsum.sh
 COPY generate_plots.sh generate_plots.sh
 RUN chmod +x compile_ctf.sh
@@ -79,6 +81,7 @@ RUN chmod +x compile_ctf_programs.sh
 RUN chmod +x run_ctf_bench.sh
 RUN chmod +x run_ctf.sh
 # RUN chmod +x compile_hptt.sh
+RUN chmod +x validate_deinsum.sh
 RUN chmod +x run_deinsum.sh
 RUN chmod +x generate_plots.sh
 CMD bash
