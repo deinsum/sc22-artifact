@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/499461384.svg)](https://zenodo.org/badge/latestdoi/499461384)
 # SC'22 Deinsum Artifact
 
 This repository is the main accompanying artifact for the SC'22 submission "Deinsum: Practically I/O Optimal Multilinear Algebra".
