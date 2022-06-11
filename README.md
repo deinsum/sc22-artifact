@@ -20,7 +20,7 @@ We provide dockerfiles and bash scripts, which can be used to create a docker im
 - [CPU Testing](docker_cpu)
 - [GPU Testing](docker_gpu)
 
-If you prefer to not use the containers, please read this [guide](node-container.md).
+If you prefer to not use the containers, please read this [guide](no-container.md).
 
 ## Hardware Requirements
 
