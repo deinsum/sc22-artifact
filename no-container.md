@@ -39,14 +39,14 @@ We suggest that you create a folder to store compiled programs and results:
 
 You need to set the following environment variables:
 - `export DACE_compiler_cpu_executable=mpicxx`
-- `export DACE_compiler_default_build_folder=/folder-name/.dacecache`
+- `export DACE_compiler_default_build_folder=/absolute/path/to/folder-name/.dacecache`
 - `export DACE_compiler_use_cache=1`
 - `export DACE_library_blas_default_implementation=MKL`
 - `export DACE_library_linalg_default_implementation=TTGT`
 - `export DACE_library_ttranspose_default_implementation=HPTT`
-- `export CTF_ROOT=/storage/libs/ctf`
-- `export CTF_EXEC=/storage/ctf_exec`
-- `export HPTT_ROOT=/storage/libs/hptt`
+- `export CTF_ROOT=/absolute/path/to/folder-name/libs/ctf`
+- `export CTF_EXEC=/absolute/path/to/folder-name/ctf_exec`
+- `export HPTT_ROOT=/absolute/path/to/folder-name/libs/hptt`
 
 You may run the benchmarks and recreate the paper's figures by running the following scripts that are in the `docker_cpu` and `docker_gpu` folders. Please note that you may have to adapat these scripts to match paths in your installation:
 - `run_ctf.sh` (compiles CTF, and CTF programs and runs CTF benchmarks)
