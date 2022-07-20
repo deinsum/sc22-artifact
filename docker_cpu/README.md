@@ -42,6 +42,7 @@ The figure is stored under `folder-name/fig2.pdf`.
 
 **NOTE 2:** Before testing at scale, you may want to do validate that Deinsum works properly on a single node. Apart from using only one MPI rank, you could try spawning multiple MPI processes in a single node. However you will very quickly run out-of-memory. For this reason we provide a validation script that runs Deinsum with minimal data sizes. In the following, num-nodes is the number of MPI processes. If num-nodes is not set, the script defaults to 1 MPI process:
    * `docker run --rm --name container-name --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./validate_deinsum_single_node.sh num-nodes`
-Please also note that the validation script will not generate any actual results. It will only validate Deinsum's output again the result from a Python reference implementation.
+
+Please also note that the validation script will not generate any actual results. It will only validate Deinsum's output against a Python reference implementation.
 
 **NOTE 3:** You do not need to run the benchmarks for all node counts. The script that generates the plot should work even with a single data point.
