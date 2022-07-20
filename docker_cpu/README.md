@@ -27,10 +27,10 @@ Steps 5, 6, and 7 are executed in the container's bash shell.
 
 Now the shell can be closed. The compiled libraries persist in the folder created in step 3.
 
-1. To run the actual benchmarks use the `run_ctf_bench.sh` and `run_deinsum.sh` scripts in combination with your cluster's docker-compatible software (e.g., Sarus, Singularity) and mpirun or your cluster's workload manager (e.g., srun). In the following, docker-compatible-exec is a placeholder corresponds to the invocation corresponding to the cluster's docker-compatible software:
+8. To run the actual benchmarks use the `run_ctf_bench.sh` and `run_deinsum.sh` scripts in combination with your cluster's docker-compatible software (e.g., Sarus, Singularity) and mpirun or your cluster's workload manager (e.g., srun). In the following, docker-compatible-exec is a placeholder corresponds to the invocation corresponding to the cluster's docker-compatible software:
    * `mpirun -n number-of-nodes docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./run_ctf_bench.sh`
    * `mpirun -n number-of-nodes docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./run_deinsum.sh`
-2. After running the benchmarks for all node counts (1, 2, 4, 8, 16, 32, 64, 128, 256, 512), you can reproduce Fig. 5 in the paper by executing:
+9. After running the benchmarks for all node counts (1, 2, 4, 8, 16, 32, 64, 128, 256, 512), you can reproduce Fig. 5 in the paper by executing:
    * `docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./generate_plots.sh`
 
 Step 2 can also be executed in a local machine with docker by downloading the storage folder and executing:
