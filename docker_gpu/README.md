@@ -25,17 +25,20 @@ Steps 5, and 6 are executed in the container's bash shell.
 
 Now the shell can be closed. The compiled libraries persist in the volume created in step 3.
 
-7. To run the actual benchmarks use the `run_ctf_bench.sh` and `run_deinsum.sh` scripts in combination with docker and mpirun or your cluster's workload manager (e.g. srun):
-   * `mpirun -n number-of-nodes nvidia-docker --rm --name container-name --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./run_ctf_bench.sh`
-   * `mpirun -n number-of-nodes nvidia-docker --rm --name container-name --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./run_deinsum.sh`
+7. To run the actual benchmarks use the `run_ctf_bench.sh` and `run_deinsum.sh` scripts in combination with your cluster's docker-compatible software (e.g., Sarus, Singularity) and mpirun or your cluster's workload manager (e.g., srun). In the following, docker-compatible-exec is a placeholder corresponds to the invocation corresponding to the cluster's docker-compatible software:
+   * `mpirun -n number-of-nodes docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./run_ctf_bench.sh`
+   * `mpirun -n number-of-nodes docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./run_deinsum.sh`
 8. After running the benchmarks for all node counts (1, 2, 4, 8, 16, 32, 64, 128, 256, 512), you can reproduce Fig. 6 in the paper by executing:
+   * `docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./generate_plots.sh`
+  
+Step 8 can also be executed in a local machine with nvidia-docker by downloading the storage folder and executing: 
    * `nvidia-docker --rm --name container-name --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storagee image-name ./generate_plots.sh`
 
 The figure is stored under `folder-name/gpu.pdf`.
 
 **NOTE 1:** Please note that we expect that the benchmarks are executed in clusters where the nodes have a common filesystem and folder-name is stored in there. This is because Deinsum is set to have MPI rank 0 compile the shared libraries, while the other ranks wait for this operation to complete before loading them. If this constraint cannot be met, please contact us to provide a workaround.
 
-**NOTE 2:** Before testing at scale, you may want to do validate that Deinsum works properly on a single node. Apart from using only one MPI rank, you could try spawning multiple MPI processes in a single node. However you will very quickly run out-of-memory. For this reason we provide a validation script that runs Deinsum with minimal data sizes:
-`mpirun -n number-of-nodes nvidia-docker --rm --name container-name --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./validate_deinsum.sh`
+**NOTE 2:** Before testing at scale, you may want to do validate that Deinsum works properly on a single node. Apart from using only one MPI rank, you could try spawning multiple MPI processes in a single node. However you will very quickly run out-of-memory. For this reason we provide a validation script that runs Deinsum with minimal data sizes. In the following, num-ranks is the number of MPI processes. If num-ranks is not set, the script defaults to 1 MPI process:
+   * `nvidia-docker run --rm --name container-name --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./validate_deinsum_single_node.sh num-ranks`
 
 **NOTE 3:** You do not need to run the benchmarks for all node counts. The script that generates the plot should work even with a single data point.

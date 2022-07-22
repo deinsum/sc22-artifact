@@ -33,14 +33,14 @@ Now the shell can be closed. The compiled libraries persist in the folder create
 9. After running the benchmarks for all node counts (1, 2, 4, 8, 16, 32, 64, 128, 256, 512), you can reproduce Fig. 5 in the paper by executing:
    * `docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./generate_plots.sh`
 
-Step 2 can also be executed in a local machine with docker by downloading the storage folder and executing:
+Step 9 can also be executed in a local machine with docker by downloading the storage folder and executing:
    * `docker run --rm --name container-name --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./generate_plots.sh`
 
 The figure is stored under `folder-name/fig2.pdf`.
 
 **NOTE 1:** Please note that we expect that the benchmarks are executed in clusters where the nodes have a common filesystem and folder-name is stored in there. This is because Deinsum is set to have MPI rank 0 compile the shared libraries, while the other ranks wait for this operation to complete before loading them. If this constraint cannot be met, please contact us to provide a workaround.
 
-**NOTE 2:** Before testing at scale, you may want to do validate that Deinsum works properly on a single node. Apart from using only one MPI rank, you could try spawning multiple MPI processes in a single node. However you will very quickly run out-of-memory. For this reason we provide a validation script that runs Deinsum with minimal data sizes. In the following, num-ranks is the number of MPI processes. If num-nodes is not set, the script defaults to 1 MPI process:
+**NOTE 2:** Before testing at scale, you may want to do validate that Deinsum works properly on a single node. Apart from using only one MPI rank, you could try spawning multiple MPI processes in a single node. However you will very quickly run out-of-memory. For this reason we provide a validation script that runs Deinsum with minimal data sizes. In the following, num-ranks is the number of MPI processes. If num-ranks is not set, the script defaults to 1 MPI process:
    * `docker run --rm --name container-name --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./validate_deinsum_single_node.sh num-ranks`
 
 Please also note that the validation script will not generate any actual results. It will only validate Deinsum's output against a Python reference implementation.

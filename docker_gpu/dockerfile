@@ -84,4 +84,10 @@ RUN chmod +x run_ctf.sh
 RUN chmod +x validate_deinsum.sh
 RUN chmod +x run_deinsum.sh
 RUN chmod +x generate_plots.sh
+COPY validate_deinsum_single_node.sh validate_deinsum_single_node.sh
+RUN chmod +x validate_deinsum_single_node.sh
+COPY run_deinsum_single_node.sh run_deinsum_single_node.sh
+RUN chmod +x run_deinsum_single_node.sh
+RUN cd dace && git config pull.rebase false
+RUN cd dace && git pull
 CMD bash
