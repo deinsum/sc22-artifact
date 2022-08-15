@@ -15,6 +15,7 @@ current_ldpath=$LD_LIBRARY_PATH
 export LIBRARY_PATH="$LIBRARY_PATH:$MKLROOT/lib/intel64"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$MKLROOT/lib/intel64:$libiomp_path:$HPTT_ROOT/lib"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$MKLROOT/lib/intel64:$HPTT_ROOT/lib"
+export OMP_NUM_THREADS=$(lscpu -p | egrep -v '^#' | sort -u -t, -k 2,4 | wc -l)
 for prog in "mm" "mttkrp_order_3" "mttkrp_order_5" "ttmc"
 do
     echo "Running ${prog} CPU testing with ${num_nodes} MPI processes."

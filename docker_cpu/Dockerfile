@@ -56,6 +56,7 @@ ENV HPTT_ROOT /storage/libs/hptt
 COPY compile_ctf.sh compile_ctf.sh
 COPY compile_ctf_programs.sh compile_ctf_programs.sh
 COPY run_ctf_bench.sh run_ctf_bench.sh
+COPY run_ctf_bench_single_node.sh run_ctf_bench_single_node.sh
 COPY run_ctf.sh run_ctf.sh
 COPY compile_hptt.sh compile_hptt.sh
 COPY run_deinsum.sh run_deinsum.sh
@@ -64,6 +65,7 @@ COPY generate_plots.sh generate_plots.sh
 RUN chmod +x compile_ctf.sh
 RUN chmod +x compile_ctf_programs.sh
 RUN chmod +x run_ctf_bench.sh
+RUN chmod +x run_ctf_bench_single_node.sh
 RUN chmod +x run_ctf.sh
 RUN chmod +x compile_hptt.sh
 RUN chmod +x run_deinsum.sh
