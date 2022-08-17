@@ -27,10 +27,10 @@ Steps 5, 6, and 7 are executed in the container's bash shell.
 
 Now the shell can be closed. The compiled libraries persist in the folder created in step 3.
 
-1. To run the actual benchmarks use the `run_ctf_bench_test.sh` and `run_deinsum_test.sh` scripts in combination with your cluster's docker-compatible software (e.g., Sarus, Singularity) and mpirun or your cluster's workload manager (e.g., srun). In the following, docker-compatible-exec is a placeholder corresponds to the invocation corresponding to the cluster's docker-compatible software, while prog is one of {mm, mttkrp_order_3, mttkrp_order_5, ttmc}. For convenience, we have added two scripts, `run_ctf_bench_test_all.sh` and `run_deinsum_test_all.sh`, as a template for automating the process of running all four programs from your cluster's login node. Please note that the following **will not work** with docker if `number-of-nodes` is greater than 1.
+8. To run the actual benchmarks use the `run_ctf_bench_test.sh` and `run_deinsum_test.sh` scripts in combination with your cluster's docker-compatible software (e.g., Sarus, Singularity) and mpirun or your cluster's workload manager (e.g., srun). In the following, docker-compatible-exec is a placeholder corresponds to the invocation corresponding to the cluster's docker-compatible software, while prog is one of {mm, mttkrp_order_3, mttkrp_order_5, ttmc}. For convenience, we have added two scripts, `run_ctf_bench_test_all.sh` and `run_deinsum_test_all.sh`, as a template for automating the process of running all four programs from your cluster's login node. Please note that the following **will not work** with docker if `number-of-nodes` is greater than 1.
    * `mpirun -n number-of-nodes docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./run_ctf_bench_test.sh prog`
    * `mpirun -n number-of-nodes docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./run_deinsum_test.sh prog`
-2. After running the benchmarks for all node counts (1, 2, 4, 8, 16, 32, 64, 128, 256, 512), you can reproduce Fig. 5 in the paper by executing:
+9. After running the benchmarks for all node counts (1, 2, 4, 8, 16, 32, 64, 128, 256, 512), you can reproduce Fig. 5 in the paper by executing:
    * `docker-compatible-exec --mount=type=bind,src=/absolute/path/to/folder-name,dst=/storage image-name ./generate_plots.sh`
 
 Step 9 can also be executed in a local machine with docker by downloading the storage folder and executing:
