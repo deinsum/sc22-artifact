@@ -1,9 +1,5 @@
 #!/bin/bash
 
-echo $MKLROOT
-ls $MKLROOT/lib/intel64
-echo $CTF_ROOT
-ls $CTF_ROOT
 FILE=$CTF_ROOT/lib/libctf.a
 if [ -f "$FILE" ]; then
     echo "$FILE exists."

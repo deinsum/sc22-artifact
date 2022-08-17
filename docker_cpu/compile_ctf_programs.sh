@@ -1,7 +1,6 @@
 #!/bin/bash
 
 cd multilinear-algebra-sc22-artifact/ctf_programs
-echo $CTF_EXEC
 for prog in "mm" "mttkrp_order_3" "mttkrp_order_5" "ttmc"
 do
     FILE=${CTF_EXEC}/${prog}_ctf

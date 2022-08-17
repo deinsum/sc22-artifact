@@ -4,7 +4,19 @@ FROM debian:bullseye-slim
 # NOTE: Constrain GCC version later?
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y install wget build-essential libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev git
-RUN apt-get -y install mpich libmpich-dev unzip libblas-dev liblapack-dev
+# RUN apt-get -y install mpich libmpich-dev unzip libblas-dev liblapack-dev
+RUN apt-get -y install unzip libblas-dev liblapack-dev
+
+RUN wget -q http://www.mpich.org/static/downloads/3.1.4/mpich-3.1.4.tar.gz \
+    && tar xf mpich-3.1.4.tar.gz \
+    && cd mpich-3.1.4 \
+    && ./configure --disable-fortran --enable-fast=all,O3 --prefix=/usr \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig \
+    && cd .. \
+    && rm -rf mpich-3.1.4 \
+    && rm mpich-3.1.4.tar.gz
 
 # Intel oneAPI MKL 2021.3.0
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
@@ -22,7 +34,9 @@ RUN git clone -b soap --recurse-submodules https://github.com/spcl/dace.git
 RUN git clone https://spclgitlab.ethz.ch/alexnick/multilinear-algebra-sc22-artifact.git
 RUN git clone https://github.com/cyclops-community/ctf.git
 RUN cd dace && python3 -m pip install .
-RUN python3 -m pip install mpi4py opt_einsum pandas seaborn matplotlib
+# RUN python3 -m pip install mpi4py opt_einsum pandas seaborn matplotlib
+RUN python3 -m pip install opt_einsum pandas seaborn matplotlib
+RUN MPICC=mpicc python3 -m pip install mpi4py
 
 # Setup MKL
 ENV MKLROOT /opt/intel/oneapi/mkl/2021.3.0
@@ -44,6 +58,7 @@ RUN mkdir storage && cd storage && mkdir results && mkdir ctf_exec && mkdir libs
 
 # Env vars
 ENV DACE_compiler_cpu_executable mpicxx
+ENV DACE_compiler_cpu_openmp_sections 0
 ENV DACE_compiler_default_build_folder /storage/.dacecache
 ENV DACE_compiler_use_cache 1
 ENV DACE_library_blas_default_implementation MKL
@@ -56,19 +71,23 @@ ENV HPTT_ROOT /storage/libs/hptt
 COPY compile_ctf.sh compile_ctf.sh
 COPY compile_ctf_programs.sh compile_ctf_programs.sh
 COPY run_ctf_bench.sh run_ctf_bench.sh
+COPY run_ctf_bench_test.sh run_ctf_bench_test.sh
 COPY run_ctf_bench_single_node.sh run_ctf_bench_single_node.sh
 COPY run_ctf.sh run_ctf.sh
 COPY compile_hptt.sh compile_hptt.sh
 COPY run_deinsum.sh run_deinsum.sh
+COPY run_deinsum_test.sh run_deinsum_test.sh
 COPY validate_deinsum.sh validate_deinsum.sh
 COPY generate_plots.sh generate_plots.sh
 RUN chmod +x compile_ctf.sh
 RUN chmod +x compile_ctf_programs.sh
 RUN chmod +x run_ctf_bench.sh
+RUN chmod +x run_ctf_bench_test.sh
 RUN chmod +x run_ctf_bench_single_node.sh
 RUN chmod +x run_ctf.sh
 RUN chmod +x compile_hptt.sh
 RUN chmod +x run_deinsum.sh
+RUN chmod +x run_deinsum_test.sh
 RUN chmod +x validate_deinsum.sh
 RUN chmod +x generate_plots.sh
 COPY validate_deinsum_single_node.sh validate_deinsum_single_node.sh
@@ -77,7 +96,10 @@ COPY run_deinsum_single_node.sh run_deinsum_single_node.sh
 RUN chmod +x run_deinsum_single_node.sh
 RUN cd dace && git config pull.rebase false
 RUN cd dace && git pull
+
+# User directory
+ENV USER=user
+ENV HOME=/home/user
+RUN mkdir -p /home/user
+
 CMD bash
-
-
-# CMD [ "mpirun", "-n", "4", "python3", "dace/samples/distributed/mm_validation.py"]
