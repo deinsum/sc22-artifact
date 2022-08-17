@@ -13,6 +13,3 @@ else
     mkdir $HPTT_ROOT/include
     cp include/* $HPTT_ROOT/include/
 fi
-ls $HPTT_ROOT
-ls $HPTT_ROOT/include
-ls $HPTT_ROOT/lib

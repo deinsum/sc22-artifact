@@ -11,6 +11,3 @@ else
     cp hptt/lib/* $CTF_ROOT/lib/
     cd ../
 fi
-ls $CTF_ROOT
-ls $CTF_ROOT/include
-ls $CTF_ROOT/lib
